@@ -1,0 +1,53 @@
+.weather-widget {
+  min-height: 3rem;
+  min-width: 3rem;
+  position: relative;
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  font-family: 'Trebuchet MS';
+  border-radius: 1rem;
+  border: 0.1rem solid lightblue;
+  .city-panel {
+    border: 0.1rem solid lightskyblue;
+    background-color: lightblue;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    margin: 0.25rem 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    * {
+      padding: .25rem;
+      margin: .1rem;
+      border-radius: 1rem;
+      border-bottom: 0.2rem solid lightseagreen;
+    }
+    .city-img {
+      max-width: 2rem;
+      max-height: 2rem;
+    }
+  }
+  .spinner {
+    &:before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin: -1rem 0 0 -1rem;
+      box-sizing: border-box;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: 0.2rem solid lightblue;
+      border-top-color: darkblue;
+      animation: spinner 1s linear infinite;
+    }
+  }
+}
