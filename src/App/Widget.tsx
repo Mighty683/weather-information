@@ -1,42 +1,26 @@
 import * as React from "react"
 import CityPanel from "./CityPanel"
 import Spinner from "./Spinner"
+import CityData from './CityData'
 import './widget.scss'
-
-export class CityData {
-    constructor(name: string, text: string, temp?: number, iconURL?: string) {
-        this.name = name
-        this.text = text
-        this.temp = temp
-        this.iconURL = iconURL
-        this.key = `${name}${new Date()}`
-    }
-    name: string
-    text: string
-    temp: number
-    iconURL: string
-    key: string
-}
 
 interface MyProps {
     cityShuffleInterval: number,
-    dataUpdateInterval: number
+    dataUpdateInterval: number,
+    citiesNames: string[]
 }
 
 interface MyState {
     citiesData: CityData[]
 }
-//https://query.yahooapis.com/v1/public/yql?q=select wind from weather.forecast where woeid in (select woeid from geo.places(1) where text='chicago, il')&format=json
 export default class Widget extends React.Component<MyProps, MyState> {
     citiesNames: string[]
-    timeout: number
-    citiesData: CityData[]
     citiesShuffleTimer: number
     updateDataTimer: number
 
     constructor (props: MyProps) {
         super(props)
-        this.citiesNames = ['Lodz', 'Warsaw', 'Berlin', 'New York', 'London']
+        this.citiesNames = props.citiesNames
         this.updateData = this.updateData.bind(this)
         this.setCitiesShuffleTimer = this.setCitiesShuffleTimer.bind(this)
         this.setDataUpdateTimer = this.setDataUpdateTimer.bind(this)
@@ -73,7 +57,7 @@ export default class Widget extends React.Component<MyProps, MyState> {
         Promise.all(cityRequests).then((responses => {
             let citiesData = responses.map((response, index) => {
                 let data = this.parseResponse(response)
-                return new CityData(citiesNames[index], data.text, data.temp, data.iconURL)
+                return new CityData(citiesNames[index], data.text, data.link, data.temp, data.iconURL)
             })
             this.setState({citiesData})
         })).catch((err) => {
@@ -89,9 +73,14 @@ export default class Widget extends React.Component<MyProps, MyState> {
         data = {
             temp: conditions.temp,
             text: conditions.text,
+            link: this.parseLinkFromResponse(dataItem.link),
             iconURL: this.parseGifFromDesc(dataItem.description)
         }
         return data
+    }
+
+    parseLinkFromResponse (string: string) {
+        return string.slice(string.indexOf('*') + 1)
     }
 
     parseGifFromDesc (string: string) {
