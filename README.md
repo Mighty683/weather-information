@@ -1,7 +1,7 @@
 # Weather Information
 
 Simple app build on webpack, react, typescript.
-Shows weather data from random ciry on the world.
+Shows weather data from random city on the world.
 
 ## Instalation
 
